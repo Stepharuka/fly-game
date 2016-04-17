@@ -50,8 +50,8 @@ function updateLevel(level,dt)
     level.world:update(dt)
 end
 
-function drawLevel(level)
-    chara_x, chara_y = character.x,character.y
+function drawLevel(character,level)
+    chara_x, chara_y = getCharacterPosition(level,character)
     x_offset = 400 - chara_x
     y_offset = 300 - chara_y
     love.graphics.setColor(BOUNDARY_COLOR[1],BOUNDARY_COLOR[2],BOUNDARY_COLOR[3])

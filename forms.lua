@@ -24,7 +24,7 @@ function makeFly(level,x,y)
     fly = {}
     fly.body = love.physics.newBody(level.world,x,y,"dynamic")
     fly.body:setGravityScale(0.1)
-    fly.body:setLinearDamping(0.5)
+    fly.body:setLinearDamping(0.5) --fly is very floaty
     fly.shape = love.physics.newCircleShape(2)
     fly.fixture = love.physics.newFixture(fly.body, fly.shape,0.5)
     fly.fixture:setRestitution(0.2)
@@ -34,8 +34,8 @@ end
 function makeSnakeLimb(level,x,y,limblength)
     limb = {}
     limb.body = love.physics.newBody(level.world,x,y,"dynamic")
-    limb.shape = love.physics.newRectangleShape(limblength,5)
-    limb.fixture = love.physics.newFixture(limb.body,limb.shape,4)
+    limb.shape = love.physics.newRectangleShape(limblength,1)
+    limb.fixture = love.physics.newFixture(limb.body,limb.shape,14)
     return limb
 end
 
@@ -48,14 +48,21 @@ function makeSnake(level,x,y,limblength)
         x = x + limblength
     end
     for i = 1, 4, 1 do
-        snake.joints[i] = love.physics.newRopeJoint(snake.limbs[i].body,snake.limbs[i+1].body,0,0,0,0,limblength)
+        snake.joints[i] = love.physics.newDistanceJoint(snake.limbs[i].body,snake.limbs[i+1].body,0,0,limblength,0,limblength)
     end
     return snake
 end
 
+function getCharacterPosition(level,character)
+    if character.shape == 'fly' then
+        return level.objects.character.body:getPosition()
+    elseif character.shape == 'snake' then
+        return level.objects.character.limbs[1].body:getPosition()
+    end
+end
+
 function makePlayerSnake(level,character)
-    form = makeSnake(level,character.x,character.y,4)
-    level.objects.character = form
+    level.objects.character = makeSnake(level,character.x,character.y,4)
 end
 
 function makePlayerFly(level,character)
@@ -76,6 +83,18 @@ function flyKeyPressed(key,level)
         level.objects.character.body:applyForce(-50,0)
     elseif key == 'l' then --right
         level.objects.character.body:applyForce(50,0)
+    end
+end
+
+function snakeKeyPressed(key,level)
+    if key == 'k' then --up
+        level.objects.character.limbs[1].body:applyForce(0,-150)
+    elseif key == 'j' then --down
+        level.objects.character.limbs[1].body:applyForce(0,150)
+    elseif key == 'h' then --left
+        level.objects.character.limbs[1].body:applyForce(-150,0)
+    elseif key == 'l' then --right
+        level.objects.character.limbs[1].body:applyForce(150,0)
     end
 end
 
@@ -114,19 +133,20 @@ function drawFly(level,x,y)
 end
 
 function drawCharacter(character,level)
-    character.x, character.y = level.objects.character.body:getPosition()
+    character.x, character.y = getCharacterPosition(character,level)
     if character.shape == 'fly' then
         drawFly(level,400,300)
     end
     if character.shape == 'snake' then
-        drawSnake(level,character,400,300)
+        drawSnake(level,level.objects.character,400,300)
     end
 end
 
 function drawSnake(level,snake,x,y)
     love.graphics.setColor(60,110,50)
-    for i = 1, 3, 1 do
-        segment = snake.shape:getChildEdge(i)
-        love.graphics.line(segment:getPoints())
+    for i = 1, 4, 1 do
+        sx,sy = snake.limbs[i].body:getPosition()
+        ex,ey = snake.limbs[i+1].body:getPosition()
+        love.graphics.line(sx,sy,ex,ey)
     end
 end

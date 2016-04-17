@@ -35,7 +35,7 @@ function love.draw()
     if mode == 'title' then
         drawTitle()
     elseif mode == 'level' then
-        drawLevel(levels[current_level],character)
+        drawLevel(character,levels[current_level])
         drawCharacter(character,levels[current_level])
         love.graphics.print("Energy: " .. character.energy,700,560)
         love.graphics.print(character.shape .. "form",40,560)
@@ -50,6 +50,8 @@ function love.keypressed(key)
     if mode == 'level' then
         if character.shape == 'fly' then
             flyKeyPressed(key,levels[current_level])
+        elseif character.shape == 'snake' then
+            snakeKeyPressed(key,levels[current_level])
         end
     end
 end
