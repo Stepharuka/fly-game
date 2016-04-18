@@ -20,6 +20,7 @@ function initCharacter()
     character.x = START_POSITION[1]
     character.y = START_POSITION[2]
     character.energy = 5
+    character.alive = true
     return character
 end
 
@@ -107,6 +108,9 @@ function makeForm(level)
 end
 
 function changeShape(character, new_shape, level)
+    if level.objects.character ~= nil then
+        level.objects.character.body:destroy()
+    end
     if new_shape == 'fly' then
         character.shape = 'fly'
         character.defaultGravity = 0.1
@@ -133,4 +137,5 @@ function changeShape(character, new_shape, level)
     if new_shape == 'dragon' then
         character.shape = 'dragon'
     end
+    level.objects.character.fixture:setUserData({character.shape,"player"})
 end

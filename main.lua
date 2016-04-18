@@ -10,6 +10,7 @@ FPS = 30
 frame = 0
 frame_dt = 1/FPS
 next_frame = 0
+frame_reset = 40320
 
 modes = {
     'loading',
@@ -38,11 +39,16 @@ function love.update(dt)
         next_frame = next_frame + frame_dt
     end
     if frame > 100000 then
-        frame = frame % 40320
+        frame = frame % frame_reset
         --don't let the frame counter get ridiculously high
         --use modulo to preserve function of other functions that use modulo
         --such as frame lengths of animations that need to repeat
         --(most values will share a factor with 8 factorial)
+    end
+    if game.playerdeath then
+        game.character.energy = game.character.energy/2
+        character.x, character.y = 400,300
+        changeShape(game.character, 'fly', game.levels[game.current_level])
     end
 end
 
@@ -57,6 +63,9 @@ function love.draw()
         love.graphics.print(game.character.shape .. "form",40,560)
         if game.character.shape == 'frog' then
             love.graphics.print(game.character.jump_angle,120,560)
+        end
+        if game.prints == true then
+            love.graphics.print(game.stufftoprint,120,120)
         end
     elseif mode == 'equip' then
         drawLevel(game.levels[game.current_level],game.character)
