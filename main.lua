@@ -1,9 +1,14 @@
 require 'forms'
+require 'forms_draw'
 require 'level'
 require 'inventory'
 
 mode = 'loading'
 current_level = 'nil'
+FPS = 30
+frame = 0
+frame_dt = 1/FPS
+next_frame = 0
 
 modes = {
     'loading',
@@ -13,6 +18,7 @@ modes = {
 }
 
 function love.load()
+    loadAssets()
     levels = {}
     levels[1] = initLevel()
     makeLevelOne(levels[1])
@@ -41,6 +47,17 @@ function love.update(dt)
     elseif mode == 'equip' then
         -- do NOT update the level or the world
     end
+    next_frame = next_frame - dt
+    if next_frame < 0 then
+        frame = frame + 1
+        next_frame = next_frame + frame_dt
+    end
+    if frame > 100000 then
+        frame = frame % 40320
+        --don't let the frame counter get ridiculously high
+        --use modulo to preserve function of other functions that use modulo
+        --(most values will share a factor with 8!)
+    end
 end
 
 function love.draw()
@@ -48,7 +65,7 @@ function love.draw()
         drawTitle()
     elseif mode == 'level' then
         drawLevel(character,levels[current_level])
-        drawCharacter(character,levels[current_level])
+        drawCharacter(character,levels[current_level],frame)
         love.graphics.print("Energy: " .. character.energy,700,560)
         love.graphics.print(character.shape .. "form",40,560)
     elseif mode == 'equip' then

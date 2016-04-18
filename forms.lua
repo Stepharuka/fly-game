@@ -42,7 +42,7 @@ function makeSnakeLimb(level,x,y,limblength)
     return limb
 end
 
-function makeSnake(level,x,y,limblength)
+function makeOldSnake(level,x,y,limblength)
     snake = {}
     snake.limbs = {}
     snake.joints = {}
@@ -56,16 +56,29 @@ function makeSnake(level,x,y,limblength)
     return snake
 end
 
+function makeSnake(level,x,y,length)
+    --Lets make it just a big box
+    snake = {}
+    snake.body = love.physics.newBody(level.world,x,y,"dynamic")
+    snake.shape = love.physics.newRectangleShape(length,15)
+    snake.fixture = love.physics.newFixture(snake.body,snake.shape,1)
+    snake.head = love.physics.newBody(level.world,x-length/2,y,"dynamic")
+    snake.headshape = love.physics.newCircleShape(12)
+    snake.headfix = love.physics.newFixture(snake.head,snake.headshape,2)
+    snake.neck = love.physics.newWeldJoint(snake.body,snake.head,x-length/2,y)
+    return snake
+end
+
 function getCharacterPosition(level,character)
     if character.shape == 'fly' then
         return level.objects.character.body:getPosition()
     elseif character.shape == 'snake' then
-        return level.objects.character.limbs[1].body:getPosition()
+        return level.objects.character.body:getPosition()
     end
 end
 
 function makePlayerSnake(level,character)
-    level.objects.character = makeSnake(level,character.x,character.y,4)
+    level.objects.character = makeSnake(level,character.x,character.y,44)
 end
 
 function makePlayerFly(level,character)

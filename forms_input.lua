@@ -14,13 +14,13 @@ end
 
 function snakeKeyDown(key,level)
     if key == 'k' then --up
-        level.objects.character.limbs[1].body:applyForce(0,-25)
+        level.objects.character.head:applyForce(0,-250)
     elseif key == 'j' then --down
-        level.objects.character.limbs[1].body:applyForce(0,25)
+        level.objects.character.head:applyForce(0,250)
     elseif key == 'h' then --left
-        level.objects.character.limbs[1].body:applyForce(-25,0)
+        level.objects.character.head:applyForce(-250,0)
     elseif key == 'l' then --right
-        level.objects.character.limbs[1].body:applyForce(25,0)
+        level.objects.character.head:applyForce(250,0)
     end
 end
 
