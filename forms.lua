@@ -1,3 +1,6 @@
+require 'forms_draw'
+require 'forms_input'
+
 all_forms = {
     'fly',
     'frog',
@@ -74,33 +77,6 @@ function makeForm(level)
     --form.body = love.physics.newBody(level.world,)
 end
 
-function flyKeyPressed(key,level)
-    if key == 'k' then --up
-        level.objects.character.body:applyForce(0,-50)
-    elseif key == 'j' then --down
-        level.objects.character.body:applyForce(0,50)
-    elseif key == 'h' then --left
-        level.objects.character.body:applyForce(-50,0)
-    elseif key == 'l' then --right
-        level.objects.character.body:applyForce(50,0)
-    end
-end
-
-function snakeKeyPressed(key,level)
-    if key == 'k' then --up
-        level.objects.character.limbs[1].body:applyForce(0,-150)
-    elseif key == 'j' then --down
-        level.objects.character.limbs[1].body:applyForce(0,150)
-    elseif key == 'h' then --left
-        level.objects.character.limbs[1].body:applyForce(-150,0)
-    elseif key == 'l' then --right
-        level.objects.character.limbs[1].body:applyForce(150,0)
-    end
-end
-
-function equipKeyPressEffects(key, level)
-end
-
 function changeShape(character, new_shape, level)
     if new_shape == 'fly' then
         character.shape = 'fly'
@@ -124,29 +100,5 @@ function changeShape(character, new_shape, level)
     end
     if new_shape == 'dragon' then
         character.shape = 'dragon'
-    end
-end
-
-function drawFly(level,x,y)
-    love.graphics.setColor(15,15,25)
-    love.graphics.circle('fill',x,y,2,4)
-end
-
-function drawCharacter(character,level)
-    character.x, character.y = getCharacterPosition(character,level)
-    if character.shape == 'fly' then
-        drawFly(level,400,300)
-    end
-    if character.shape == 'snake' then
-        drawSnake(level,level.objects.character,400,300)
-    end
-end
-
-function drawSnake(level,snake,x,y)
-    love.graphics.setColor(60,110,50)
-    for i = 1, 4, 1 do
-        sx,sy = snake.limbs[i].body:getPosition()
-        ex,ey = snake.limbs[i+1].body:getPosition()
-        love.graphics.line(sx,sy,ex,ey)
     end
 end

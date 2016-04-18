@@ -26,6 +26,18 @@ end
 function love.update(dt)
     if mode == 'level' then
         updateLevel(levels[current_level],dt)
+        if love.keyboard.isDown('h') then
+            characterKeyDown('h',character,levels[current_level])
+        end
+        if love.keyboard.isDown('l') then
+            characterKeyDown('l',character,levels[current_level])
+        end
+        if love.keyboard.isDown('j') then
+            characterKeyDown('j',character,levels[current_level])
+        end
+        if love.keyboard.isDown('k') then
+            characterKeyDown('k',character,levels[current_level])
+        end
     elseif mode == 'equip' then
         -- do NOT update the level or the world
     end
@@ -47,13 +59,6 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if mode == 'level' then
-        if character.shape == 'fly' then
-            flyKeyPressed(key,levels[current_level])
-        elseif character.shape == 'snake' then
-            snakeKeyPressed(key,levels[current_level])
-        end
-    end
 end
 
 function love.keyreleased(key)
