@@ -1,14 +1,9 @@
-function levelKeyDown(character, level)
-        if love.keyboard.isDown('h') then
-            characterKeyDown('h',character,level)
+character_commands = { 'h', 'l', 'j', 'k', 'right', 'left' }
+
+function levelKeyDown(character, level, dt)
+    for i, chara in ipairs(character_commands) do
+        if love.keyboard.isDown(chara) then
+            characterKeyDown(chara,character,level,dt)
         end
-        if love.keyboard.isDown('l') then
-            characterKeyDown('l',character,level)
-        end
-        if love.keyboard.isDown('j') then
-            characterKeyDown('j',character,level)
-        end
-        if love.keyboard.isDown('k') then
-            characterKeyDown('k',character,level)
-        end
+    end
 end

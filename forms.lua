@@ -34,6 +34,15 @@ function makeFly(level,x,y)
     return fly
 end
 
+function makeFrog(level,x,y)
+    frog = {}
+    frog.body = love.physics.newBody(level.world,x,y,"dynamic")
+    frog.shape = love.physics.newRectangleShape(40,32)
+    frog.fixture = love.physics.newFixture(frog.body, frog.shape, 1)
+    frog.body:setGravityScale(1.2)
+    return frog
+end
+
 function makeSnakeLimb(level,x,y,limblength)
     limb = {}
     limb.body = love.physics.newBody(level.world,x,y,"dynamic")
@@ -74,6 +83,8 @@ function getCharacterPosition(level,character)
         return level.objects.character.body:getPosition()
     elseif character.shape == 'snake' then
         return level.objects.character.body:getPosition()
+    elseif character.shape == 'frog' then
+        return level.objects.character.body:getPosition()
     end
 end
 
@@ -85,6 +96,11 @@ function makePlayerFly(level,character)
     level.objects.character = makeFly(level,character.x,character.y)
 end
 
+function makePlayerFrog(level,character)
+    level.objects.character = makeFrog(level,character.x,character.y)
+    character.jump_angle = -math.pi/2
+end
+
 function makeForm(level)
     form = {}
     --form.body = love.physics.newBody(level.world,)
@@ -93,6 +109,7 @@ end
 function changeShape(character, new_shape, level)
     if new_shape == 'fly' then
         character.shape = 'fly'
+        character.defaultGravity = 0.1
         makePlayerFly(level,character)
     end
     if new_shape == 'cat' then
@@ -100,6 +117,8 @@ function changeShape(character, new_shape, level)
     end
     if new_shape == 'frog' then
         character.shape = 'frog'
+        character.defaultGravity = 1.2
+        makePlayerFrog(level,character)
     end
     if new_shape == 'bird' then
         character.shape = 'bird'

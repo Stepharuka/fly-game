@@ -28,7 +28,7 @@ end
 function love.update(dt)
     if mode == 'level' then
         updateLevel(game.levels[game.current_level],dt)
-        levelKeyDown(game.character, game.levels[game.current_level])
+        levelKeyDown(game.character, game.levels[game.current_level],dt)
     elseif mode == 'equip' then
         -- do NOT update the level or the world
     end
@@ -52,8 +52,12 @@ function love.draw()
     elseif mode == 'level' then
         drawLevel(game.character,game.levels[game.current_level])
         drawCharacter(game.character,game.levels[game.current_level],frame)
+        love.graphics.setColor(0,0,0)
         love.graphics.print("Energy: " .. game.character.energy,700,560)
         love.graphics.print(game.character.shape .. "form",40,560)
+        if game.character.shape == 'frog' then
+            love.graphics.print(game.character.jump_angle,120,560)
+        end
     elseif mode == 'equip' then
         drawLevel(game.levels[game.current_level],game.character)
         drawCharacter(game.character,game.levels[game.current_level])
@@ -62,6 +66,9 @@ function love.draw()
 end
 
 function love.keypressed(key)
+    if mode == 'level' then
+        characterKeyPressed(key,game.character,game.levels[game.current_level])
+    end
 end
 
 function love.keyreleased(key)
