@@ -1,5 +1,4 @@
 
-
 function flyKeyDown(key,level,dt)
     if key == 'k' then --up
         level.objects.character.body:applyForce(0,-5)
