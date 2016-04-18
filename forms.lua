@@ -28,7 +28,7 @@ function makeFly(level,x,y)
     fly.body = love.physics.newBody(level.world,x,y,"dynamic")
     fly.body:setGravityScale(0.1)
     fly.body:setLinearDamping(0.5) --fly is very floaty
-    fly.shape = love.physics.newCircleShape(2)
+    fly.shape = love.physics.newCircleShape(3)
     fly.fixture = love.physics.newFixture(fly.body, fly.shape,0.5)
     fly.fixture:setRestitution(0.2)
     return fly

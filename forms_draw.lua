@@ -15,7 +15,7 @@ end
 
 function drawFly(level,x,y,frame)
     f = 1 + (frame % 4)
-    love.graphics.draw(flysprite.sheet, flysprite.f[f],x-16,y-16)
+    love.graphics.draw(flysprite.sheet, flysprite.f[f],x-16,y-14)
 end
 
 function drawOldSnake(level,snake,x,y)
@@ -37,7 +37,7 @@ function drawSnake(level,snake,x,y)
 end
 
 function drawCharacter(character,level,frame)
-    character.x, character.y = getCharacterPosition(character,level)
+    character.x, character.y = getCharacterPosition(level,character)
     if character.shape == 'oldfly' then
         drawOldFly(level,400,300)
     elseif character.shape == 'fly' then

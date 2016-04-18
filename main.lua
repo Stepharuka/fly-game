@@ -1,10 +1,11 @@
+require 'game_state'
+require 'input_handle'
 require 'forms'
 require 'forms_draw'
 require 'level'
 require 'inventory'
 
 mode = 'loading'
-current_level = 'nil'
 FPS = 30
 frame = 0
 frame_dt = 1/FPS
@@ -19,31 +20,15 @@ modes = {
 
 function love.load()
     loadAssets()
-    levels = {}
-    levels[1] = initLevel()
-    makeLevelOne(levels[1])
-    character = initCharacter()
+    game = initGame()
     love.graphics.setBackgroundColor(180,180,186)
-    changeShape(character, 'fly', levels[1])
-    current_level = 1
     mode = 'level'
 end
 
 function love.update(dt)
     if mode == 'level' then
-        updateLevel(levels[current_level],dt)
-        if love.keyboard.isDown('h') then
-            characterKeyDown('h',character,levels[current_level])
-        end
-        if love.keyboard.isDown('l') then
-            characterKeyDown('l',character,levels[current_level])
-        end
-        if love.keyboard.isDown('j') then
-            characterKeyDown('j',character,levels[current_level])
-        end
-        if love.keyboard.isDown('k') then
-            characterKeyDown('k',character,levels[current_level])
-        end
+        updateLevel(game.levels[game.current_level],dt)
+        levelKeyDown(game.character, game.levels[game.current_level])
     elseif mode == 'equip' then
         -- do NOT update the level or the world
     end
@@ -56,7 +41,8 @@ function love.update(dt)
         frame = frame % 40320
         --don't let the frame counter get ridiculously high
         --use modulo to preserve function of other functions that use modulo
-        --(most values will share a factor with 8!)
+        --such as frame lengths of animations that need to repeat
+        --(most values will share a factor with 8 factorial)
     end
 end
 
@@ -64,13 +50,13 @@ function love.draw()
     if mode == 'title' then
         drawTitle()
     elseif mode == 'level' then
-        drawLevel(character,levels[current_level])
-        drawCharacter(character,levels[current_level],frame)
-        love.graphics.print("Energy: " .. character.energy,700,560)
-        love.graphics.print(character.shape .. "form",40,560)
+        drawLevel(game.character,game.levels[game.current_level])
+        drawCharacter(game.character,game.levels[game.current_level],frame)
+        love.graphics.print("Energy: " .. game.character.energy,700,560)
+        love.graphics.print(game.character.shape .. "form",40,560)
     elseif mode == 'equip' then
-        drawLevel(levels[current_level],character)
-        drawCharacter(character,levels[current_level])
+        drawLevel(game.levels[game.current_level],game.character)
+        drawCharacter(game.character,game.levels[game.current_level])
         drawInventory()
     end
 end
